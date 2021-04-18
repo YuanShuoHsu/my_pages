@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import 'antd/dist/antd.css';
+import { Button } from 'antd';
 
 class TodoList extends Component{
     constructor(props) {
@@ -13,34 +15,61 @@ class TodoList extends Component{
             <Fragment>
                 <div>
                     <input
+                        placeholder = '留言'
                         value = { this.state.inputValue }
                         onChange = { (e) => this.handleInputChange(e) }
+                        onKeyPress={ (e) => this.handleKeypress(e) }
                     />
-                    <button
+                    <Button type="primary"
                         onClick = { (e) => this.handleBtnClick(e) }
-                    >提交</button>
+                    >提交</Button>
                 </div>
-                <p>
-                    { this.state.handleinputValue }
+                {/* <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" placeholder="留言" id="search_text_collapse" onkeydown="keyboard_enter_collapse(event)"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="search_button" onclick="search_data()">
+                            <i class="fas fa-music fa-sm fa-fw" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div> */}
+                <p
+                    onClick = { (e) => this.handleItemDelete(e) }
+                    dangerouslySetInnerHTML = {{ __html: this.state.handleinputValue }}
+                >
                 </p>
+                
             </Fragment>
         )
     }
+
     handleInputChange(e) {
         const inputvalue = e.target.value
-        if(inputvalue.length > 20) {
+        if (inputvalue.length > 20) {
             return
         }
-        this.setState({
+        this.setState(() => ({
             inputValue: inputvalue
-        })
+        }))
     }
-    handleBtnClick(e) {
-        this.setState({
-            handleinputValue: this.state.inputValue
-        })
+
+    handleKeypress(e) {
+        if (e.charCode === 13) {
+            this.handleBtnClick()
+        }
+    }
+
+    handleBtnClick() {
+        this.setState((preState) => ({
+            handleinputValue: preState.inputValue,
+            inputValue: ''
+        }))
+    }
+
+    handleItemDelete() {
+        this.setState(() => ({
+            handleinputValue: ''
+        }))
     }
 }
-
 
 export default TodoList;
